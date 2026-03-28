@@ -10,7 +10,7 @@ import {
   allowedFileFormat,
   localUpload,
 } from "../../Common/Multer/multer.config.js";
-
+import path from "path"
 import { coverPicSchema, getAnotherUserProfileSchema, profilePicSchema } from "./user.validtion.js";
 import { validation } from "../../../middleware/validation.middleware.js";
 
@@ -43,6 +43,8 @@ userRouter.post(
 
   async (req, res) => {
     const result = await userSercice.uploadProfilePic(req.user._id, req.file);
+    console.log(path.resolve("./uploads"));
+    
     return successResponse({ res, statusCode: 201, data: result });
   },
 );
