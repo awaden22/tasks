@@ -7,6 +7,7 @@ import {
 import { RoleEnums } from "../Enums/enums.user.js";
 import jwt from "jsonwebtoken";
 import { TokenEnums } from "../Enums/token.enums.js";
+import {randomUUID} from "crypto";
 
 export function getSignature(role = RoleEnums.User) {
   let accessSignature = "";
@@ -35,14 +36,17 @@ export function verifyToken(token, signature) {
   return jwt.verify(token, signature);
 }
 export async function generateAceessTokenAndRefreshToken(user){
+  const tokenId= randomUUID();
    const { accessSignature, refreshSignature } = getSignature(user.role);
     const accessToken = generateSignature({ sub: user._id }, accessSignature, {
       audience: [user.role, TokenEnums.Access],
       expiresIn: 60 * 20,
+      jwtid:tokenId
     });
     const refreshToken = generateSignature({ sub: user._id }, refreshSignature, {
       audience: [user.role, TokenEnums.Refresh],
       expiresIn: "1y",
+      jwtid:tokenId
     });
     return{accessToken,refreshToken}
 }

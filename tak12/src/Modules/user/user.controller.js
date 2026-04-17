@@ -10,7 +10,7 @@ import {
   allowedFileFormat,
   localUpload,
 } from "../../Common/Multer/multer.config.js";
-import path from "path";
+
 import {
   coverPicSchema,
   getAnotherUserProfileSchema,
@@ -23,7 +23,7 @@ const userRouter = express.Router();
 userRouter.get(
   "/",
   authentication(),
-  authorization([RoleEnums.Admin]),
+  authorization([RoleEnums.User]),
   async (req, res) => {
     return successResponse({ res, statusCode: 201, data: req.user });
   },
@@ -80,5 +80,15 @@ userRouter.get(
     return successResponse({ res, data: result });
   },
 );
+
+userRouter.delete("/remove-profile-pic",authentication(),async(req,res)=>{
+  const result = await userSercice.removeProfileIamge(req.user._id)
+  return successResponse({res , data:result})
+})
+
+userRouter.post("/logout", authentication(), async (req, res) => {
+  const result = await userSercice.logout(req.user._id, req.payload,req.body.logoutOptions);
+  return successResponse({ res, data: result });
+});
 
 export default userRouter;
