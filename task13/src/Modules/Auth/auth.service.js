@@ -2,6 +2,7 @@ import {
   badRequestException,
   conflictException,
   notFoundException,
+  successResponse,
 } from "../../Common/Response/response.js";
 import UserModel from "../../DB/Models/User.model.js";
 
@@ -99,13 +100,16 @@ export async function signup(bodydata) {
 export async function confirmEmail(bodydata) {
   const { email, otp } = bodydata;
   const user = await DBRepo.findOne(UserModel, {
-    email,
-    confirmEmail: false,
+    email
   });
 
-  if (!user) {
-    return notFoundException("invalid email or email already verified");
-  }
+if (!user) {
+  return notFoundException("email not found");
+}
+
+if (user.confirmEmail) {
+  return badRequestException("email already verified");
+}
 
   //
   const expireConfirmEmail = await RedisMethods.get(
@@ -155,7 +159,6 @@ export async function confirmEmail(bodydata) {
   // 8. save user
   await user.save();
 
-  return successResponse("email confirmed successfully");
 }
 
 export async function resendConfirmEmailOtp(email) {

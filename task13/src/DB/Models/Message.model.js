@@ -4,7 +4,7 @@ const messageSchema = new mongoose.Schema(
   {
     content: {
       type: String,
-      require: function () {
+      required: function () {
         return !this.attachment;
       },
     },
@@ -18,7 +18,7 @@ const messageSchema = new mongoose.Schema(
     receiverId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "user",
-      require: true,
+      required: true,
     },
   },
   {

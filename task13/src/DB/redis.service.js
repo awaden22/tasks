@@ -2,7 +2,11 @@ import { client } from "./redis.connection.js";
 
 export async function set(key, value, expire) {
   const options = expire && expire > 0 ? { EX: Math.floor(expire) } : {};
-  return await client.set(key, value, options);
+  // Redis accepts only strings or buffers.
+  if (typeof value === "object" && value !== null) {
+    value = JSON.stringify(value);
+  }
+  return await client.set(key.toString(), value, options);
 }
 export async function get(key) {
   return await client.get(key);
@@ -42,10 +46,10 @@ export function blockListTokenId(userId, TokenId) {
 export function getOTPkey(email, type) {
   return `otp::${email}::${type}`;
 }
-export async function getOTPReqNOkey(email, type) {
+export function getOTPReqNOkey(email, type) {
   return `otp::${email}::${type}::NO`;
 }
-export async function getOTPReqBlockkey(email, type) {
+export function getOTPReqBlockkey(email, type) {
   return `otp::${email}::${type}::blocked`;
 }
 export function get2FALoginKey(email, type) {

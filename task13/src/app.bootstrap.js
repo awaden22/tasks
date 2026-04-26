@@ -9,6 +9,7 @@ import path from "path";
 import cors from "cors";
 import { testRedisConnection } from "./DB/redis.connection.js";
 
+
 async function bootstrap() {
   const app = express();
   const port = SERVER_PORT;
@@ -21,6 +22,7 @@ async function bootstrap() {
   app.use("/uploads", express.static(path.resolve("./uploads")));
   app.use("/auth", authRouter);
   app.use("/user", userRouter);
+ 
   app.use(globalErrorResponse);
   app.listen(port, () => {
     console.log(`server is running on port ${port}`);

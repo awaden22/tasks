@@ -28,6 +28,7 @@ authRouter.post(
   "/confirmEmail",
   validation(confirmEmailSchema),
   async (req, res) => {
+    
     const result = await authSercice.confirmEmail(req.vbody);
     return successResponse({ res, data: result });
   },
