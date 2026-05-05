@@ -48,6 +48,10 @@ authRouter.post("/send-forget-password-otp",validation(sendForgetPasswordOtpSche
   const result = await authSercice.sendOtpForgetPassword(req.vbody.email)
   return successResponse({res,data:result})
 })
+authRouter.post("/reset-password",validation(resendConfirmEmailOtpSchema),async(req,res)=>{
+  const result = await authSercice.forgotPasswordLink(req.vbody.email)
+  return successResponse({res,data:result})
+})
 
 authRouter.post("/verify-forget-password-otp",validation(verifyForgetPasswordOtpSchema),async(req,res)=>{
 
@@ -62,6 +66,7 @@ authRouter.post("/reset-forget-password-otp",validation(resetForgetPasswordSchem
   const result = await authSercice.resetPassword(req.vbody)
   return successResponse({res,data:result})
 })
+
 authRouter.post(
   "/resend-forget-password-otp",
   validation(resendConfirmEmailOtpSchema),
